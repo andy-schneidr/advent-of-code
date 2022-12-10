@@ -23,8 +23,8 @@ module Day10
         cpu.execute_instruction(line)
       end
       result = []
-      1.step(240, 1) { |pixel_pos|
-        if (cpu.register_X_history[pixel_pos] - ((pixel_pos-1) % 40)).abs < 2
+      0.step(239, 1) { |pixel_pos|
+        if (cpu.register_X_history[pixel_pos] - ((pixel_pos) % 40)).abs < 2
           result.append("#")
         else
           result.append(".")
@@ -35,7 +35,7 @@ module Day10
 
     def print_result(result)
       result = result.join("")
-      0.step(240, 40) { |row_start|
+      0.step(239, 40) { |row_start|
         puts result[row_start..row_start+39]
       }
     end
@@ -51,9 +51,6 @@ module Day10
       @cycle = 0
       @register_X = 1
       @register_X_history = []
-      update_history
-      @cycle += 1
-      update_history
     end
 
     def execute_instruction(instruction)
@@ -64,18 +61,18 @@ module Day10
         @cycle += 1
         update_history
         @cycle += 1
-        @register_X += instruction.split(' ')[1].to_i
         update_history
+        @register_X += instruction.split(' ')[1].to_i
       end
     end
 
     def update_history
-      puts "during cycle #{@cycle}, X is #{@register_X}"
+      # puts "during cycle #{@cycle}, X is #{@register_X}"
       @register_X_history.append(@register_X)
     end
 
     def get_signal(during_cycle)
-      @register_X_history[during_cycle] * during_cycle
+      @register_X_history[during_cycle-1] * during_cycle
     end
   end
 end
