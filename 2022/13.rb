@@ -1,3 +1,5 @@
+require 'json/add/rails'
+
 module Day13
   class << self
     def part_one(input)
@@ -58,6 +60,7 @@ module Day13
 
     # returns the packet, and the current index in the text
     def parse_packet(text, i=1)
+      return JSON.parse(text)
       result = []
       while i < text.length
         if text[i] == "["
