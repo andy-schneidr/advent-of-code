@@ -1,4 +1,4 @@
-require 'json/add/rails'
+require 'json'
 
 module Day13
   class << self
@@ -48,8 +48,8 @@ module Day13
     def parse_packets(input)
       pairs = []
       0.step(input.length-1, 3) { |i|
-        packet_1 = parse_packet(input[i].strip)[0]
-        packet_2 = parse_packet(input[i+1].strip)[0]
+        packet_1 = JSON.parse(input[i].strip)
+        packet_2 = JSON.parse(input[i+1].strip)
         pairs.append([
           packet_1,
           packet_2
@@ -59,27 +59,27 @@ module Day13
     end
 
     # returns the packet, and the current index in the text
-    def parse_packet(text, i=1)
-      return JSON.parse(text)
-      result = []
-      while i < text.length
-        if text[i] == "["
-          inner_result = parse_packet(text, i+1)
-          result.append(inner_result[0])
-          i = inner_result[1]
-        elsif text[i] == ","
-          i += 1
-        elsif text[i] == "]"
-          return [result, i+1]
-        else
-          # This is a number!
-          num = text[i..text.length].scan(/\d+/)[0]
-          i += num.length
-          result.append(num.to_i)
-        end
-      end
-    end
-
+    # Rolls eyes in JSON
+    # def parse_packet(text, i=1)
+    #   return JSON.parse(text)
+    #   result = []
+    #   while i < text.length
+    #     if text[i] == "["
+    #       inner_result = parse_packet(text, i+1)
+    #       result.append(inner_result[0])
+    #       i = inner_result[1]
+    #     elsif text[i] == ","
+    #       i += 1
+    #     elsif text[i] == "]"
+    #       return [result, i+1]
+    #     else
+    #       # This is a number!
+    #       num = text[i..text.length].scan(/\d+/)[0]
+    #       i += num.length
+    #       result.append(num.to_i)
+    #     end
+    #   end
+    # end
 
     # Recursive function, left and right can be integers or arrays
     def compare(left, right)
