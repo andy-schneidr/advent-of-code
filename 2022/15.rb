@@ -57,7 +57,7 @@ module Day15
         end
         distance_to_row = (row - sensor.location_xy[y]).abs
         remaining_distance = sensor.manhattan_dist - distance_to_row
-        if remaining_distance > 0
+        if remaining_distance >= 0
           # puts "using sensor at #{sensor.location_xy.to_s} w mh dist: #{sensor.manhattan_dist}"
           unusable_ranges.append([
             sensor.location_xy[x] - remaining_distance,
@@ -76,17 +76,13 @@ module Day15
     def scan_for_usable_positions(min, max, sensors)
       x = 0
       y = 1
-      # beacons_on_row = Set.new
       # unusable_ranges is only measuring the X axis
       min.step(max, 1) { |row|
         unusable_ranges = []
         sensors.each do |sensor|
-          # if sensor.closest_beacon_xy[y] == row
-          #   beacons_on_row << sensor.closest_beacon_xy[x]
-          # end
           distance_to_row = (row - sensor.location_xy[y]).abs
           remaining_distance = sensor.manhattan_dist - distance_to_row
-          if remaining_distance > 0
+          if remaining_distance >= 0
             # puts "using sensor at #{sensor.location_xy.to_s} w mh dist: #{sensor.manhattan_dist}"
             unusable_ranges.append([
               sensor.location_xy[x] - remaining_distance,
@@ -104,19 +100,13 @@ module Day15
           break
         end
       }
-      # puts beacons_on_row
-      # return unusable_locations - beacons_on_row.length
-
+      return -1
     end
 
     def combine_ranges(ranges)
       ranges.sort!
       result = []
       current = ranges[0]
-      # puts "Ranges (uncombined): "
-      # ranges.each do |range|
-      #   puts range.to_s
-      # end
 
       1.step(ranges.length - 1, 1) { |i|
         range = ranges[i]
@@ -130,11 +120,6 @@ module Day15
         end
       }
       result.append(current)
-
-      # puts "Ranges (combined): "
-      # result.each do |range|
-      #   puts range.to_s
-      # end
     end
 
     def sum_ranges(ranges)
