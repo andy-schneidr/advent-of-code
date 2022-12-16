@@ -69,7 +69,6 @@ module Day15
 
       unusable_ranges = combine_ranges(unusable_ranges)
       unusable_locations = sum_ranges(unusable_ranges)
-      # puts beacons_on_row
       return unusable_locations - beacons_on_row.length
     end
 
@@ -139,6 +138,7 @@ module Day15
       @closest_beacon_xy = beacon_xy
       @manhattan_dist = (sensor_xy[0] - beacon_xy[0]).abs +
                         (sensor_xy[1] - beacon_xy[1]).abs
+      puts "Distance: #{manhattan_dist}"
     end
   end
 end
