@@ -3,24 +3,45 @@ module Day16
     def part_one(input)
       valves = parse_valves(input)
       distance_map = get_distances(valves)
-      puts distance_map["AA"].to_s
       good_valves = valves.select { |key, valve| valve.rate > 0 }
-      current = "AA"
-      cache = {}
-      result = explore(cache, current, distance_map, good_valves, 30)
+      result = explore_with_cache("AA", distance_map, good_valves, 30)
     end
 
     def part_two(input)
-      # raise NotImplementedError
+      valves = parse_valves(input)
+      distance_map = get_distances(valves)
+      good_valves = valves.select { |key, valve| valve.rate > 0 }
+      result = team_explore("AA", distance_map, good_valves, 26)
     end
 
-    def explore(cache, current, distance_map, other_valves, time_left)
+    def team_explore(current, distance_map, other_valves, time_left)
+      [
+        # Take the maximum of:
+        # exploring from the current location, given valve states and time left, recursing into this function
+        explore(current, distance_map, other_valves, time_left, true),
+        # Just straight up how good someone could do exploring with a full 26 minutes, with the given time left.
+        explore_with_cache("AA", distance_map, other_valves, 26),
+      # Basically.... This is kind of like trying to determine who should open the next valve, and which one.
+      ].max
+    end
+
+    $cache = {}
+
+    def explore_with_cache(current, distance_map, other_valves, time_left)
       key = [current, other_valves.keys, time_left]
-      if cache.key?(key)
-        return cache[key]
+      if $cache.key?(key)
+        return $cache[key]
       end
+      result = explore(current, distance_map, other_valves, time_left)
+      $cache[key] = result
+    end
+
+    def explore(current, distance_map, other_valves, time_left, as_team = false)
       results = [0]
-      # look at result of travelling to and opening each node?
+      # Given the current location, we have to pick the next valve to go and open
+      # let's do a depth-first-search exploration of trying to open each valve and
+      # see what leads to the best outcome.
+      # look at result of travelling to and opening each valve?
       other_valves.each do |name, valve|
         if distance_map[current][valve.label] >= time_left
           next
@@ -29,14 +50,18 @@ module Day16
         new_time = time_left - distance_map[current][valve.label] - 1
         remaining_valves = other_valves.clone
         remaining_valves.delete(valve.label)
-        best_exploration = explore(cache, valve.label, distance_map, remaining_valves, new_time)
+        best_exploration = 0
+        if as_team
+          best_exploration = team_explore(valve.label, distance_map, remaining_valves, new_time)
+        else
+          best_exploration = explore(valve.label, distance_map, remaining_valves, new_time)
+        end
 
         pressure = valve.rate * new_time
 
         # overall result is the pressure gained from opening this valve, plus best exploration
         results.append(pressure + best_exploration)
       end
-      cache[key] = results.max
       results.max
     end
 
@@ -109,8 +134,8 @@ module Day16
 end
 
 lines = File.readlines("examples/16/16.txt")
-# puts Day16.part_one(lines)
+puts Day16.part_one(lines)
 # puts Day16.part_two(lines)
 lines = File.readlines("inputs/16.txt")
-puts Day16.part_one(lines)
+# puts Day16.part_one(lines)
 # puts Day16.part_two(lines)
