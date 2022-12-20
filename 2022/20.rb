@@ -8,7 +8,6 @@ module Day20
       result = brute_the_thing(vals)
       zero_index = 0
       0.step(result.length-1, 1) { |i|
-        # puts "hello?? #{result[i]}"
         if result[i][0] == 0
           zero_index = i
           puts "zero index: #{zero_index}"
@@ -33,7 +32,6 @@ module Day20
       }
       zero_index = 0
       0.step(result.length-1, 1) { |i|
-        # puts "hello?? #{result[i]}"
         if result[i][0] == 0
           zero_index = i
           puts "zero index: #{zero_index}"
@@ -49,7 +47,6 @@ module Day20
 
     def brute_the_thing(vals)
       0.step(vals.length-1, 1) { |i|
-        # find the element we need to move
         0.step(vals.length-1, 1) { |idx|
           if vals[idx][1] == i
             debug ""
@@ -57,16 +54,7 @@ module Day20
             extra = 0
             origin = idx
             destination = idx + vals[idx][0]
-            # destination -= 1 if destination <= 0
-            # destination += 1 if destination >= vals.length
             destination %= (vals.length - 1)
-            # if idx + vals[idx][0] < 0
-            #   extra = -1
-            # end
-            # if idx + vals[idx][0] > vals.length
-            #   extra = 1
-            # end
-            # vals.insert((idx+vals[idx][0] + extra) % vals.length, vals.delete_at(idx))
             debug "moving #{vals[idx]} Destination: #{destination} Origin: #{origin}"
             vals.insert destination, vals.delete_at(origin)
             debug "After: #{vals.to_s}"
