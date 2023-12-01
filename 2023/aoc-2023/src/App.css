@@ -108,6 +108,16 @@ select {
   text-shadow: 0 0 2px #eeeeee, 0 0 2px #eeeeee;
 }
 
+.Day-results .Mismatch {
+  color: #ff0000;
+  text-shadow: 0 0 2px #ff0000, 0 0 5px #ff0000;
+}
+
+.Day-results .Correct {
+  color: #00cc00;
+  text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

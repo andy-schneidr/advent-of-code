@@ -13,7 +13,7 @@ console.log(`Downloading input for day ${day}`);
 const SESSION_ID_FILE = path.join(__dirname, ".session");
 const INPUT_FILE = path.join(
   __dirname,
-  `public/io/day${day}/input.in.txt`
+  `public/io/useDay${day}/input.in.txt`
 );
 const AGENT_NAME = "github.com/andy-schneidr/advent-of-code";
 const AGENT_VERSION = "2023-11-29";
