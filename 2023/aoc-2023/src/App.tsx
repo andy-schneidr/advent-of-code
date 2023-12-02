@@ -4,12 +4,14 @@ import logo from './logo.svg';
 import useDayExample from './components/useDayExample/useDayExample';
 import Day from './components/Day/Day';
 import useDay1 from './components/useDay1/useDay1';
+import useDay2 from './components/useDay2/useDay2';
 
 function App() {
 
   const options = [
     {value: "Example", day: useDayExample},
     {value: "Day 1", day: useDay1},
+    {value: "Day 2", day: useDay2},
   ]
 
   const [day, setDay] = useState("Example");
