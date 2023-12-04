@@ -1,22 +1,65 @@
-import React, { useState } from 'react';
-import './App.css';
-import logo from './logo.svg';
-import useDayExample from './components/useDayExample/useDayExample';
-import Day from './components/Day/Day';
-import useDay1 from './components/useDay1/useDay1';
-import useDay2 from './components/useDay2/useDay2';
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./App.css";
+import logo from "./logo.svg";
+import Day from "./components/Day/Day";
+import useDay1 from "./components/useDay1/useDay1";
+import useDay2 from "./components/useDay2/useDay2";
+import useDay3 from "./components/useDay3/useDay3";
+import useDay4 from "./components/useDay4/useDay4";
+const options = [
+  { value: "1", day: useDay1 },
+  { value: "2", day: useDay2 },
+  { value: "3", day: useDay3 },
+  { value: "4", day: useDay4 },
+];
+
+const Dropdown = () => {
+  const url = new URL(window.location.href);
+  const args = new URLSearchParams(url.search);
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const dayParam = URLSearchParams ? args.get("day") : null;
+
+  const [day, setDay] = useState<string | undefined>(dayParam || "1");
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("day", day || "1");
+    navigate({
+      pathname: "/",
+      search: searchParams.toString(),
+    });
+  }, [day, location.search, navigate]);
+
+  return (
+    <div className="Day-select">
+      <p>Select a day</p>
+      <select
+        value={day}
+        placeholder="Select a day"
+        onChange={(e) => setDay(e.currentTarget.value)}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.value}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
 
 function App() {
+  const location = useLocation();
 
-  const options = [
-    {value: "Example", day: useDayExample},
-    {value: "Day 1", day: useDay1},
-    {value: "Day 2", day: useDay2},
-  ]
-
-  const [day, setDay] = useState("Example");
-
-  const selectedDay = options.find((option) => option.value === day)?.day;
+  const args = new URLSearchParams(location.search);
+  const dayParam = URLSearchParams ? args.get("day") : null;
+  const useDayFound = options.find((option) => option.value === dayParam);
+  const useDay = useDayFound ? useDayFound.day : undefined;
 
   return (
     <div className="App">
@@ -26,20 +69,16 @@ function App() {
           <span>Advent of Code 2023</span>
           <img src={logo} className="App-logo" alt="logo" />
         </h1>
-        <div className="Day-select">
-          <p>Select a day</p>
-          <select value={day} onChange={(e) => setDay(e.currentTarget.value)}>
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.value}
-              </option>
-            ))}
-          </select>
-        </div>
       </header>
+      <Dropdown />
 
-
-      { selectedDay ? <Day useDay={selectedDay} /> : <div>Select a day</div> }
+      <Routes>
+        <Route
+          key={Date.UTC.toString()}
+          path="/"
+          element={useDay ? <Day useDay={useDay} /> : null}
+        />
+      </Routes>
     </div>
   );
 }
