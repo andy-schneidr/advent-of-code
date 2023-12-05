@@ -27,9 +27,14 @@ export const setupDayResults = async (directory: string): Promise<Result[]> => {
     const fullpath1 = `${directory}/${name}.1.txt`;
     const fullpath2 = `${directory}/${name}.2.txt`;
 
-    const input = await readFile(fullpathIn);
-    const expected1 = await readFile(fullpath1);
-    const expected2 = await readFile(fullpath2);
+    let promise = await Promise.all([
+      fetch(fullpathIn).then((response) => response.text()),
+      fetch(fullpath1).then((response) => response.text()),
+      fetch(fullpath2).then((response) => response.text()),
+    ]);
+    const input = promise[0].split("\n");
+    const expected1 = promise[1].split("\n");
+    const expected2 = promise[2].split("\n");
 
     return {
       name,

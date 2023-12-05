@@ -8,11 +8,13 @@ import useDay1 from "./components/useDay1/useDay1";
 import useDay2 from "./components/useDay2/useDay2";
 import useDay3 from "./components/useDay3/useDay3";
 import useDay4 from "./components/useDay4/useDay4";
+import useDay5 from "./components/useDay5/useDay5";
 const options = [
   { value: "1", day: useDay1 },
   { value: "2", day: useDay2 },
   { value: "3", day: useDay3 },
   { value: "4", day: useDay4 },
+  { value: "5", day: useDay5 },
 ];
 
 const Dropdown = () => {
@@ -66,7 +68,7 @@ function App() {
       <header className="App-header">
         <h1>
           <img src={logo} className="App-logo" alt="logo" />
-          <span>Advent of Code 2023</span>
+          <span>AoC 2023 in TypeScript</span>
           <img src={logo} className="App-logo" alt="logo" />
         </h1>
       </header>
