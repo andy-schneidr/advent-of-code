@@ -3,18 +3,7 @@ import { setupDayResults } from "../utils";
 import { Result } from "../types";
 
 export default function useDay3() {
-  const symbols = [
-    "*",
-    "+",
-    "-",
-    "/",
-    "%",
-    "@",
-    "&",
-    "#",
-    "=",
-    "$",
-  ];
+  const symbols = [ "*", "+", "-", "/", "%", "@", "&", "#", "=", "$"];
 
   // Check if any of the characters arount the character at row, col are symbols
   const checkForSymbol = (row: number, col: number, input: string[]) => {
@@ -46,7 +35,6 @@ export default function useDay3() {
     // (*, X, +, -, /, %, ^, !, =, <, >, &, |, ~, ?)
     // If it is, add it to the list of numbers.
     //
-
     const partNumbers: number[] = [];
 
     for (let row = 0; row < input.length; row++) {
@@ -63,24 +51,16 @@ export default function useDay3() {
           }
         }
         else if (currentNumber !== null && isNumber) {
-            // The current thing is a number and there's a number going
-            // console.log("currentNumber", currentNumber);
             currentNumber = currentNumber * 10 + parseInt(char);
         }
 
         if (currentNumber !== null && currentNumberIsAPart === false && isNumber) {
           currentNumberIsAPart = checkForSymbol(row, col, input);
-          // if (currentNumberIsAPart) {
-            // console.log(currentNumber + " is a part!");
-          // }
         }
 
         // Are we at the end of the number or the line?
         if (col === input[row].length - 1 || !isNumber) {
           if (currentNumber !== null && currentNumberIsAPart) {
-            // If at the end of a line, or the current character is a .
-            // Add the current partNumber to the list
-            // console.log("Adding", currentNumber, "to partNumbers");
             partNumbers.push(currentNumber);
           }
           currentNumber = null;
@@ -91,12 +71,9 @@ export default function useDay3() {
 
     let sum = 0;
     for (let num of partNumbers) {
-      sum += num; // Add each number to the total sum
+      sum += num;
     }
     return sum;
-    // NOT 549067
-    // NOT 566581
-    // NOT 540516
   };
 
   type gear = {
