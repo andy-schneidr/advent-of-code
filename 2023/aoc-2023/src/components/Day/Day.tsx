@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Result } from "../types";
+import useGetInputs from "../useGetInputs/useGetInputs";
 
 // props for Day, takes a useDay hook as a prop
 interface DayProps {
-  useDay: () => Result[];
+  useDay: () => {
+    part1: (input: string[]) => string | number;
+    part2: (input: string[]) => string | number;
+  };
 }
 
 enum ResultType {
@@ -13,7 +17,36 @@ enum ResultType {
 }
 
 export default function Day({ useDay }: DayProps) {
-  const results = useDay();
+  const ioPath = `${process.env.PUBLIC_URL}/io/${useDay.name}`;
+  const { part1, part2 } = useDay();
+
+  const resultsInput: Result[] = useGetInputs({ ioPath });
+
+  const [results, setResults] = useState<Result[]>([]);
+
+  const calculateResults = async (resultsInput:Result[]) => {
+    const newResults: Result[] = [];
+    // run part 1 and part 2 for each entry in result and return the results
+    resultsInput.forEach((result) => {
+      console.log(`Running ${useDay.name} part 1 for: ${result.name}`);
+      let start = new Date();
+      result.output1 = part1(result.input);
+      result.duration1 = new Date().getTime() - start.getTime();
+      console.log(`Running ${useDay.name} part 2 for: ${result.name}`);
+      start = new Date();
+      result.output2 = part2(result.input);
+      result.duration2 = new Date().getTime() - start.getTime();
+      newResults.push(result);
+    });
+
+    setResults(newResults);
+  }
+
+  useEffect(() => {
+    calculateResults(resultsInput);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultsInput, part1, part2]);
+
 
   const compare = (output: string | number, expected: string | number) => {
     if (typeof output === "number" && typeof expected === "number") {
