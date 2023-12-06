@@ -9,12 +9,14 @@ import useDay2 from "./components/useDay2/useDay2";
 import useDay3 from "./components/useDay3/useDay3";
 import useDay4 from "./components/useDay4/useDay4";
 import useDay5 from "./components/useDay5/useDay5";
+import useDay6 from "./components/useDay6/useDay6";
 const options = [
   { value: "1", day: useDay1 },
   { value: "2", day: useDay2 },
   { value: "3", day: useDay3 },
   { value: "4", day: useDay4 },
   { value: "5", day: useDay5 },
+  { value: "6", day: useDay6 },
 ];
 
 const Dropdown = () => {
