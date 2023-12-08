@@ -30,42 +30,46 @@ const letterToValueMapPart1: { [key: string]: number } = {
   "2": 2,
 };
 
-const getHandType = (cards: number[]): HandType => {
-  const c1 = cards[0];
-  const c2 = cards[1];
-  const c3 = cards[2];
-  const c4 = cards[3];
-  const c5 = cards[4];
-  if (c1 === c2 && c2 === c3 && c3 === c4 && c4 === c5) {
+const letterToValueMapPart2: { [key: string]: number } = {
+  ...letterToValueMapPart1,
+  J: 1,
+};
+
+const getHandType = (cards: string[], jokers: boolean): HandType => {
+  const counts: { [key: string]: number } = {};
+  cards.forEach((card) => {
+    counts[card] = (counts[card] || 0) + 1;
+  });
+  const sortableCounts: { card: string; count: number }[] = [];
+  for (const card in counts) {
+    sortableCounts.push({ card, count: counts[card] });
+  }
+  sortableCounts.sort((a, b) => b.count - a.count);
+
+  if (jokers) {
+    const jokersIndex = sortableCounts.findIndex((count) => count.card === "J");
+    if (jokersIndex !== -1 && sortableCounts[0].count < 5) {
+      const jokersCount = sortableCounts.splice(jokersIndex, 1)[0].count;
+      sortableCounts[0].count += jokersCount;
+    }
+  }
+
+  if (sortableCounts[0].count === 5) {
     return HandType.FiveOfAKind;
   }
-  if (
-    (c1 === c2 && c2 === c3 && c3 === c4) ||
-    (c2 === c3 && c3 === c4 && c4 === c5)
-  ) {
+  if (sortableCounts[0].count === 4) {
     return HandType.FourOfAKind;
   }
-  if (
-    (c1 === c2 && c2 === c3 && c4 === c5) ||
-    (c1 === c2 && c3 === c4 && c4 === c5)
-  ) {
+  if (sortableCounts[0].count === 3 && sortableCounts[1].count === 2) {
     return HandType.FullHouse;
   }
-  if (
-    (c1 === c2 && c2 === c3) ||
-    (c2 === c3 && c3 === c4) ||
-    (c3 === c4 && c4 === c5)
-  ) {
+  if (sortableCounts[0].count === 3) {
     return HandType.ThreeOfAKind;
   }
-  if (
-    (c1 === c2 && c3 === c4) ||
-    (c1 === c2 && c4 === c5) ||
-    (c2 === c3 && c4 === c5)
-  ) {
+  if (sortableCounts[0].count === 2 && sortableCounts[1].count === 2) {
     return HandType.TwoPairs;
   }
-  if (c1 === c2 || c2 === c3 || c3 === c4 || c4 === c5) {
+  if (sortableCounts[0].count === 2) {
     return HandType.OnePair;
   }
   return HandType.HighCard;
@@ -81,15 +85,12 @@ const part1 = (input: string[]): string | number => {
     let [handRaw, bid] = line.split(" ");
 
     let cards = handRaw.split("");
-    const cardValues = cards.map((card) => letterToValueMapPart1[card]);
     const hand: Hand = {
-      cards: cardValues,
+      cards: cards.map((card) => letterToValueMapPart1[card]),
       type: HandType.HighCard,
       bid: parseInt(bid),
     };
-    const cardsCopy = [...hand.cards];
-    cardsCopy.sort();
-    hand.type = getHandType(cardsCopy);
+    hand.type = getHandType(cards.sort(), false);
     allHands.push(hand);
   }
 
@@ -113,67 +114,6 @@ const part1 = (input: string[]): string | number => {
   return handXBidProducts;
 };
 
-const letterToValueMapPart2: { [key: string]: number } = {
-  A: 14,
-  K: 13,
-  Q: 12,
-  T: 10,
-  "9": 9,
-  "8": 8,
-  "7": 7,
-  "6": 6,
-  "5": 5,
-  "4": 4,
-  "3": 3,
-  "2": 2,
-  J: 1,
-};
-
-const getHandTypeGivenOnes = (type: HandType, numOnes: number): HandType => {
-  if (numOnes === 0) {
-    return type;
-  }
-  switch (type) {
-    case HandType.HighCard:
-      if (numOnes === 1) {
-        return HandType.OnePair;
-      }
-      return HandType.HighCard;
-    case HandType.OnePair:
-      if (numOnes === 1 || numOnes === 2) {
-        return HandType.ThreeOfAKind;
-      }
-      return HandType.OnePair;
-
-    case HandType.TwoPairs:
-      if (numOnes === 1) {
-        return HandType.FullHouse;
-      } else if (numOnes === 2) {
-        return HandType.FourOfAKind;
-      }
-      return HandType.TwoPairs;
-    case HandType.ThreeOfAKind:
-      if (numOnes === 1) {
-        return HandType.FourOfAKind;
-      } else if (numOnes === 3) {
-        return HandType.FourOfAKind;
-      }
-      return HandType.ThreeOfAKind;
-    case HandType.FullHouse:
-      if (numOnes === 2 || numOnes === 3) {
-        return HandType.FiveOfAKind;
-      }
-      return HandType.FullHouse;
-    case HandType.FourOfAKind:
-      if (numOnes === 1 || numOnes === 4) {
-        return HandType.FiveOfAKind;
-      }
-      return HandType.FourOfAKind;
-    case HandType.FiveOfAKind:
-      return HandType.FiveOfAKind;
-  }
-};
-
 const part2 = (input: string[]): string | number => {
   if (input.length < 2) {
     return "Invalid input";
@@ -187,17 +127,12 @@ const part2 = (input: string[]): string | number => {
     let [handRaw, bid] = line.split(" ");
 
     let cards = handRaw.split("");
-    const cardValues = cards.map((card) => letterToValueMapPart2[card]);
     const hand: Hand = {
-      cards: cardValues,
+      cards: cards.map((card) => letterToValueMapPart2[card]),
       type: HandType.HighCard,
       bid: parseInt(bid),
     };
-    const numOnes = hand.cards.filter((card) => card === 1).length;
-    const cardsCopy = [...hand.cards].map((card) => (card === 1 ? 0 : card));
-    cardsCopy.sort();
-    hand.type = getHandType(cardsCopy);
-    hand.type = getHandTypeGivenOnes(hand.type, numOnes);
+    hand.type = getHandType(cards, true);
     allHands.push(hand);
   }
 
