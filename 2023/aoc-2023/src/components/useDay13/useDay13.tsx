@@ -65,11 +65,6 @@ const findVertical = (pattern: string[], useSmudge: boolean): number | null => {
   return null;
 };
 
-type ReflectionLine = {
-  horizontal: number | null;
-  vertical: number | null;
-};
-
 const computeReflections = (
   input: string[],
   useSmudge: boolean = false
@@ -84,25 +79,19 @@ const computeReflections = (
     }
   }
 
-  const reflections: ReflectionLine[] = [];
+  let sum = 0;
   for (let i = 0; i < patterns.length; i++) {
     const horizontal = findHorizontal(patterns[i], useSmudge);
-    const vertical =
-      horizontal === null ? findVertical(patterns[i], useSmudge) : null;
-    reflections.push({
-      horizontal,
-      vertical,
-    });
-  }
-  let sum = 0;
-  for (let i = 0; i < reflections.length; i++) {
-    if (reflections[i].horizontal !== null) {
-      sum += reflections[i].horizontal! * 100;
-    } else if (reflections[i].vertical !== null) {
-      sum += reflections[i].vertical! * 1;
-    } else {
-      console.log("Error - Could not find line of reflection for pattern: ", i);
+    if (horizontal !== null) {
+      sum += horizontal * 100;
+      continue;
     }
+    const vertical = findVertical(patterns[i], useSmudge);
+    if (vertical !== null) {
+      sum += vertical * 1;
+      continue;
+    }
+    console.log("Error - Could not find line of reflection for pattern: ", i);
   }
   return sum;
 };
