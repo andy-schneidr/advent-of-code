@@ -12,7 +12,13 @@ const findHorizontal = (
       for (let j = 0; j < pattern[lower].length; j++) {
         if (pattern[lower][j] !== pattern[upper][j]) {
           errors++;
+          if (errors > 1) {
+            break;
+          }
         }
+      }
+      if (errors > 1) {
+        break;
       }
       count++;
       lower++;
@@ -36,6 +42,10 @@ const matchingColumn = (
   for (let i = 0; i < pattern.length; i++) {
     if (pattern[i][colA] !== pattern[i][colB]) {
       errors++;
+      // the condition below is pretty specific to this problem, eeeugh
+      if (errors > 1) {
+        break;
+      }
     }
   }
   return errors;
@@ -55,6 +65,12 @@ const findVertical = (pattern: string[], useSmudge: boolean): number | null => {
       count++;
       r++;
       l--;
+      if (errors > 1) {
+        break;
+      }
+    }
+    if (errors > 1) {
+      continue;
     }
     if (useSmudge && errors === 1) {
       return c + 1;
