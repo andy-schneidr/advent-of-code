@@ -24,10 +24,16 @@ export default function Day({ useDay }: DayProps) {
 
   const [results, setResults] = useState<Result[]>([]);
 
-  const calculateResults = async (resultsInput:Result[]) => {
+  const calculateResults = async (resultsInput: Result[]) => {
     const newResults: Result[] = [];
     // run part 1 and part 2 for each entry in result and return the results
     resultsInput.forEach((result) => {
+      if (result.input.length < 2) {
+        result.output1 = "Invalid input";
+        result.output2 = "Invalid input";
+        newResults.push(result);
+        return;
+      }
       console.log(`Running ${useDay.name} part 1 for: ${result.name}`);
       let start = new Date();
       result.output1 = part1(result.input);
@@ -40,13 +46,12 @@ export default function Day({ useDay }: DayProps) {
     });
 
     setResults(newResults);
-  }
+  };
 
   useEffect(() => {
     calculateResults(resultsInput);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultsInput, part1, part2]);
-
 
   const compare = (output: string | number, expected: string | number) => {
     if (typeof output === "number" && typeof expected === "number") {
@@ -54,7 +59,7 @@ export default function Day({ useDay }: DayProps) {
     } else {
       return output.toString() === expected.toString();
     }
-  }
+  };
 
   const resultMarkup = (result: Result) => {
     const result1 = !result.expected1

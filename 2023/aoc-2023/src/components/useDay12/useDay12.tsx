@@ -7,6 +7,7 @@ const placeGroups = (
 ): number => {
   const key = `${groupIndex}-${idx}`;
   if (memo.has(key)) {
+    // console.log("memo hit");
     return memo.get(key)!;
   }
   if (groupIndex === groups.length) {
