@@ -28,7 +28,7 @@ export default function Day({ useDay }: DayProps) {
     const newResults: Result[] = [];
     // run part 1 and part 2 for each entry in result and return the results
     resultsInput.forEach((result) => {
-      if (result.input.length < 1) {
+      if (result.input.length < 1 || result.input[0].length < 1) {
         result.output1 = "Invalid input";
         result.output2 = "Invalid input";
         newResults.push(result);
