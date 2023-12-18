@@ -83,7 +83,13 @@ const part2 = (input: string[]): string | number => {
   }
   const points = convertToPoints(instructions);
   const perimeter = getPerimeter(instructions);
-  // WHY IS IT HALF THE PERIMETER???? I DON'T UNDERSTANDDDD
+  // Uhm. I think we have to add half the perimeter because the
+  // computed area covers half the whole blocky perimeter, but
+  // we need to include the whole perimeter in the total area.
+  // So we gotta add half the computed perimeter.
+  // BUT there are 4 corners in the perimeter where the computed
+  // area only covered 1/4 instead of 1/2, so we gotta add 1 to
+  // make up for the lost 1/4 in each of the 4 corners.
   return shoeLaceArea(points) + perimeter / 2 + 1;
 };
 
