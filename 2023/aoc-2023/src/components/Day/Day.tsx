@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Result } from "../types";
+import { DayProps, Result } from "../types";
 import useGetInputs from "../useGetInputs/useGetInputs";
-
-// props for Day, takes a useDay hook as a prop
-interface DayProps {
-  useDay: () => {
-    part1: (input: string[]) => string | number;
-    part2: (input: string[]) => string | number;
-  };
-}
+import useDayAndInputs from "../useDayAndInputs/useDayAndInputs";
 
 enum ResultType {
   Mismatch = "Mismatch",
@@ -18,9 +11,8 @@ enum ResultType {
 
 export default function Day({ useDay }: DayProps) {
   const ioPath = `${process.env.PUBLIC_URL}/io/${useDay.name}`;
-  const { part1, part2 } = useDay();
 
-  const resultsInput: Result[] = useGetInputs({ ioPath });
+  const { part1, part2, resultsInput } = useDayAndInputs({ useDay, ioPath });
 
   const [results, setResults] = useState<Result[]>([]);
 
