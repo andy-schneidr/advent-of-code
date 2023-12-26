@@ -118,7 +118,7 @@ const parseInput = (input: string[]): Brick[] => {
     };
   });
 
-  return bricks;
+  return bricks.sort((a, b) => a.aa.z - b.aa.z);
 };
 
 const part1 = (input: string[]): string | number => {
