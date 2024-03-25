@@ -80,11 +80,7 @@ const Dropdown = () => {
   return (
     <div className="Day-select">
       <p>Select a day</p>
-      <select
-        value={day}
-        placeholder="Select a day"
-        onChange={(e) => setDay(e.currentTarget.value)}
-      >
+      <select value={day} onChange={(e) => setDay(e.currentTarget.value)}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.value}
